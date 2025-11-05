@@ -14,14 +14,32 @@ import zipfile
 from PIL import Image
 import io
 import re
+import os
+import tempfile
+from pathlib import Path
 
-# ========================
-# CONFIGURAÇÕES INICIAIS
-# ========================
+# Configurações de cache para diferentes ambientes
+def setup_environment():
+    if 'STREAMLIT_CLOUD' in os.environ:
+        # Streamlit Cloud - usar diretórios temporários
+        base_dir = Path(tempfile.gettempdir())
+        stanza_dir = base_dir / 'stanza_resources'
+        hf_dir = base_dir / 'hf_cache'
+        
+        # Criar diretórios se não existirem
+        stanza_dir.mkdir(exist_ok=True)
+        hf_dir.mkdir(exist_ok=True)
+        
+        os.environ['STANZA_RESOURCES_DIR'] = str(stanza_dir)
+        os.environ['TRANSFORMERS_CACHE'] = str(hf_dir)
+        os.environ['NLTK_DATA'] = str(base_dir / 'nltk_data')
+    else:
+        # Ambiente local
+        os.environ['STANZA_RESOURCES_DIR'] = r"D:\stanza_resources"
+        os.environ['TRANSFORMERS_CACHE'] = r"D:\hf_cache"
 
-# Configurações de ambiente
-os.environ['STANZA_RESOURCES_DIR'] = r"D:\stanza_resources"
-os.environ['TRANSFORMERS_CACHE'] = r"D:\hf_cache"
+# Chamar a configuração no início
+
 
 # Download recursos (apenas primeira execução)
 @st.cache_resource
