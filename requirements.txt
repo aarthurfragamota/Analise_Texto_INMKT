@@ -1,0 +1,10 @@
+streamlit
+pandas
+nltk
+wordcloud
+matplotlib
+transformers
+torch
+stanza
+openpyxl
+pillow
